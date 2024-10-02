@@ -1,49 +1,30 @@
-resource "aws_iam_user" "vault_admin" {
-  name = var.user_name
-  path = "/"
-
-  tags = {
-    Name = var.user_name
-  }
+output "vault_admin_id" {
+  description = "Vault Admin IAM User ID"
+  value = aws_iam_user.vault_admin.id
 }
 
-resource "aws_iam_access_key" "vault_admin_accesskey" {
-  user = aws_iam_user.vault_admin.name
-  lifecycle {
-    ignore_changes = [
-    user
-    ]
-  }
+output "vault_admin_arn" {
+  description = "Vault Admin IAM User ARN"
+  value = aws_iam_user.vault_admin.arn
 }
 
-data "aws_iam_policy_document" "inline_po_vault" {
-  statement {
-    effect    = "Allow"
-    actions   = [
-        "iam:AttachUserPolicy",
-        "iam:CreateUser",
-        "iam:CreateAccessKey",
-        "iam:DeleteUser",
-        "iam:DeleteAccessKey",
-        "iam:DeleteUserPolicy",
-        "iam:DetachUserPolicy",
-        "iam:GetUser",
-        "iam:ListAccessKeys",
-        "iam:ListAttachedUserPolicies",
-        "iam:ListGroupsForUser",
-        "iam:ListUserPolicies",
-        "iam:PutUserPolicy",
-        "iam:AddUserToGroup",
-        "iam:RemoveUserFromGroup"
-        ]
-    resources = [
-		"arn:aws:iam::339713018668:user/vault-*"
-        ]
-  }
+output "vault_admin_name" {
+  description = "Vault Admin IAM User Name"
+  value = aws_iam_user.vault_admin.name
 }
 
-resource "aws_iam_user_policy" "inline_po_attach" {
-  name   = var.inline_po_name
-  user   = aws_iam_user.vault_admin.name
-  policy = data.aws_iam_policy_document.inline_po_vault.json
+output "vault_admin_accesskey" {
+  description = "Vault Admin IAM User Access Key"
+  value = aws_iam_access_key.vault_admin_accesskey.id
+}
+
+output "vault_admin_secret_accesskey" {
+  description = "Vault Admin IAM User Secret Access Key"
+  value = aws_iam_access_key.vault_admin_accesskey.secret
+  sensitive = true
+}
+
+output "vault_admin_encrypt_secret_accesskey" {
+  description = "Vault Admin IAM User Encrypted Secret Access Key"
+  value = aws_iam_access_key.vault_admin_accesskey.encrypted_secret
 }
